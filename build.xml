@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Dynamo CouchDB Connector is a plugin for browsing CouchDB views in LucidDB.
+Copyright (C) 2011 Dynamo Business Intelligence Corporation
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version approved by Dynamo Business Intelligence Corporation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+-->
+
+<project default="jar">
+
+  <property name="src.dir" value="${basedir}/src" />
+  <property name="lib.dir" value="${basedir}/libs" />
+  <property name="build.dir" value="${basedir}/build" />
+
+  <path id="classpath">
+    <fileset file="${lib.dir}/*.jar" />
+  </path>
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="build">
+    <mkdir dir="${build.dir}/classes" />
+    <!-- hack to package all classes up together -->
+    <unjar dest="${build.dir}/classes">
+      <fileset file="${lib.dir}/*.jar" />
+    </unjar>
+    <javac srcdir="${src.dir}" destdir="${build.dir}/classes"
+      classpathref="classpath" />
+  </target>
+
+  <target name="jar" depends="build">
+    <jar destfile="${build.dir}/couchdbConnector.jar">
+      <fileset dir="${build.dir}/classes">
+        <include name="**/*" />
+      </fileset>
+    </jar>
+  </target>
+
+</project>
