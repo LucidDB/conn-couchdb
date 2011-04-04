@@ -43,8 +43,8 @@ import java.sql.PreparedStatement;
 
 /**
  * Generic Udx class to build any custom functions to browse CouchDB views.
+ * @author Kevin Secretan
  */
-
 public class CouchUdx {
 
   /**

@@ -28,6 +28,7 @@ import net.sf.farrago.namespace.impl.*;
 /**
  * Simple wrapper class for the creation of a foreign table wrapper, nothing
  * special.
+ * @author Kevin Secretan
  */
 public class MedCouchDataWrapper extends MedAbstractDataWrapper {
 

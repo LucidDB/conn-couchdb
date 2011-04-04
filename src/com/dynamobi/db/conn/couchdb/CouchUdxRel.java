@@ -29,6 +29,7 @@ import org.eigenbase.rex.RexNode;
 /**
  * Overrides the standard FarragoJavaUdxRel, mainly needed to provide
  * a return function of the custom CouchColumnSet.
+ * @author Kevin Secretan
  */
 public class CouchUdxRel extends FarragoJavaUdxRel {
 

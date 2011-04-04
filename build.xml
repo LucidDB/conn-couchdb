@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="jar">
 
-  <!-- basedir expected to be open/dev/extensions/conn/couchdb-connectors -->
-  <property name="open.dir" value="${basedir}/../../../" />
-
   <property name="src.dir" value="${basedir}/src" />
   <property name="lib.dir" value="${basedir}/libs" />
   <property name="build.dir" value="${basedir}/deploy" />
 
   <path id="classpath">
-    <pathelement location="${open.dir}/farrago/dist/farrago.jar" />
     <fileset file="${lib.dir}/*.jar" />
   </path>
 
@@ -24,6 +20,7 @@
       <fileset excludes="farrago.jar" file="${lib.dir}/*.jar" />
     </unjar>
     <javac srcdir="${src.dir}" destdir="${build.dir}/classes"
+      includeantruntime="false"
       classpathref="classpath" />
   </target>
 
