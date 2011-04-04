@@ -45,7 +45,7 @@ import java.sql.PreparedStatement;
  * Generic Udx class to build any custom functions to browse CouchDB views.
  */
 
-public class CouchDBdcUdx {
+public class CouchUdx {
 
   /**
    * Called by a custom LucidDB function for each view.
@@ -57,7 +57,7 @@ public class CouchDBdcUdx {
    * @param resultInserter - Table for inserting results. Assumed to have the
    * necessary column names in the order we get them.
    */
-  public static void execute(
+  public static void query(
       String userName,
       String pw,
       String url,
@@ -75,8 +75,11 @@ public class CouchDBdcUdx {
         JSONObject cols = (JSONObject) obj.get("value");
         int c = 0;
         for (Iterator iter2 = cols.keySet().iterator(); iter2.hasNext(); ) {
-          String key = (String) iter2.next();
-          String value = (String) cols.get(key);
+          // TODO: de-stringify the value.
+          Object k = iter2.next();
+          if (k == null) continue;
+          Object v = cols.get(k.toString());
+          String value  = (v != null) ? v.toString() : null;
           resultInserter.setString(++c, value);
         }
         resultInserter.executeUpdate();
