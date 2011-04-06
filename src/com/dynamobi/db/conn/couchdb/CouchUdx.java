@@ -98,8 +98,10 @@ public class CouchUdx {
     try {
       URL u = new URL(url + "/" + view);
       HttpURLConnection uc = (HttpURLConnection) u.openConnection();
-      uc.setRequestProperty(
+      if ( user != null && user.length() > 0 ) { 
+    	  uc.setRequestProperty(
           "Authorization", "Basic " + buildAuthHeader(user, pw));
+      }
       uc.connect();
       String s = readStringFromConnection(uc);
 
@@ -108,7 +110,11 @@ public class CouchUdx {
       JSONObject o = (JSONObject) parser.parse(s);
       JSONArray a = (JSONArray) o.get("rows");
       return a;
-    } catch (MalformedURLException e) {
+    } 
+    // REVIEW NAG 05-APR-2011
+    // Add actual SQL exception processing and eliminate 
+    // stacktraces.
+    catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
