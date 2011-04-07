@@ -25,18 +25,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+
+
+import net.sf.farrago.type.FarragoParameterMetaData;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import org.apache.commons.codec.binary.Base64;
+
+import java.sql.ParameterMetaData;
 
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
@@ -63,24 +64,47 @@ public class CouchUdx {
       String url,
       String view,
       PreparedStatement resultInserter) {
+	  
+	   String[] paramNames = null;
+	    ParameterMetaData pmd;
+	    try {
+			 pmd = resultInserter.getParameterMetaData();
+			 // Specialize so we can column names for our resultInserter
+			 
+			 FarragoParameterMetaData fpmd = (FarragoParameterMetaData) pmd;
+			 int paramCount = fpmd.getParameterCount();
+			 paramNames = new String[paramCount];
+			 for ( int i = 0 ; i < paramCount; i++ ){
+				 paramNames[i] = fpmd.getFieldName(i+1); // JDBC offset
+			 }
+
+		} catch (SQLException e1) {
+			// TODO
+			e1.printStackTrace();
+		}
+	    
+
 
     JSONArray lst = getViewRows(userName, pw, url, view);
     if (lst == null)
       return;
+    
+ 
+	
 
     try {
       Iterator iter = lst.iterator();
       while (iter.hasNext()) {
         JSONObject obj = (JSONObject) iter.next();
         JSONObject cols = (JSONObject) obj.get("value");
-        int c = 0;
-        for (Iterator iter2 = cols.keySet().iterator(); iter2.hasNext(); ) {
-          // TODO: de-stringify the value.
-          Object k = iter2.next();
-          if (k == null) continue;
-          Object v = cols.get(k.toString());
-          String value  = (v != null) ? v.toString() : null;
-          resultInserter.setString(++c, value);
+        
+        for ( int c = 0 ; c < paramNames.length ; c++ ) {
+        	Object o = cols.get(paramNames[c]);
+        	if ( o != null ) {
+        		// TODO work on data types
+        		resultInserter.setString(c+1, o.toString());
+        	}
+        	
         }
         resultInserter.executeUpdate();
       }
