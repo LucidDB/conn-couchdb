@@ -81,9 +81,9 @@ public class MedCouchDataServer extends MedAbstractDataServer {
    */
   public void initialize() throws SQLException {
     Properties props = getProperties();
-    requireProperty(props, PROP_USERNAME);
+    //requireProperty(props, PROP_USERNAME);
     un = props.getProperty(PROP_USERNAME);
-    requireProperty(props, PROP_PASSWORD);
+    //requireProperty(props, PROP_PASSWORD);
     pw = props.getProperty(PROP_PASSWORD);
     url = props.getProperty(PROP_URL, DEFAULT_URL);
   }
