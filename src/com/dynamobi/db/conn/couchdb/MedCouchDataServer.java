@@ -43,8 +43,10 @@ public class MedCouchDataServer extends MedAbstractDataServer {
 
   // These are options taken by the server and potentially by the foreign table.
   public static final String PROP_USERNAME = "USERNAME";
+  public static final String DEFAULT_USERNAME = "";
   
   public static final String PROP_PASSWORD = "PASSWORD";
+  public static final String DEFAULT_PASSWORD = "";
 
   public static final String PROP_URL = "URL";
   public static final String DEFAULT_URL = "http://localhost:5984";
@@ -54,15 +56,19 @@ public class MedCouchDataServer extends MedAbstractDataServer {
   public static final String PROP_VIEW_DEF = "VIEW_DEF";
   public static final String DEFAULT_VIEW_DEF = "";
 
+  public static final String PROP_LIMIT = "LIMIT";
+  public static final String DEFAULT_LIMIT = "";
+
   public static final String PROP_UDX_SPECIFIC_NAME = "UDX_SPECIFIC_NAME";
   public static final String DEFAULT_UDX_SPECIFIC_NAME
-    = "LOCALDB.COUCHDB.WRAPPER_UDX"; // must be created
+    = "LOCALDB.SYS_COUCHDB.WRAPPER_UDX"; // must be created
 
   private MedAbstractDataWrapper wrapper;
   // server uses these values
   private String un;
   private String pw;
   private String url;
+  private String limit;
 
   private static final Logger tracer
     = FarragoTrace.getClassTracer(MedCouchDataServer.class);
@@ -81,11 +87,10 @@ public class MedCouchDataServer extends MedAbstractDataServer {
    */
   public void initialize() throws SQLException {
     Properties props = getProperties();
-    //requireProperty(props, PROP_USERNAME);
-    un = props.getProperty(PROP_USERNAME);
-    //requireProperty(props, PROP_PASSWORD);
-    pw = props.getProperty(PROP_PASSWORD);
+    un = props.getProperty(PROP_USERNAME, DEFAULT_USERNAME);
+    pw = props.getProperty(PROP_PASSWORD, DEFAULT_PASSWORD);
     url = props.getProperty(PROP_URL, DEFAULT_URL);
+    limit = props.getProperty(PROP_LIMIT, DEFAULT_LIMIT);
   }
 
   // implment FarragoMedDataServer
@@ -110,12 +115,16 @@ public class MedCouchDataServer extends MedAbstractDataServer {
     String myUn = tableProps.getProperty(PROP_USERNAME, un);
     String myPw = tableProps.getProperty(PROP_PASSWORD, pw);
     String myUrl = tableProps.getProperty(PROP_URL, url);
+    String myLimit = tableProps.getProperty(PROP_LIMIT, limit);
 
     requireProperty(tableProps, PROP_VIEW);
     String view = tableProps.getProperty(PROP_VIEW);
-    String viewDef=getProperties().getProperty(PROP_VIEW_DEF, DEFAULT_VIEW_DEF);
+
+    // we only support view_def on server definitions.
+    // since we can't easily rewrite the foreign table storage.
+    String viewDef = getProperties().getProperty(PROP_VIEW_DEF, DEFAULT_VIEW_DEF);
     if (!viewDef.equals("")) {
-      // don't save it in the final foreign table information.
+      // don't save it in the final server data.
       getProperties().remove(PROP_VIEW_DEF);
     }
 
@@ -128,6 +137,7 @@ public class MedCouchDataServer extends MedAbstractDataServer {
         myUrl,
         view,
         viewDef,
+        myLimit,
         udxSpecificName);
   }
 

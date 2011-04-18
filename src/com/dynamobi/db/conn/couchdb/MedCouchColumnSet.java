@@ -47,6 +47,7 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
   private final String password;
   private final String url;
   private final String view;
+  private final String limit;
 
   private final String udxSpecificName;
 
@@ -59,7 +60,8 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
       String url,
       String view,
       String viewDef,
-      String udxSpecificName) {
+      String limit,
+      String udxSpecificName) throws java.sql.SQLException {
     super(localName, null, rowType, null, null);
     this.server = server;
     this.udxSpecificName = udxSpecificName;
@@ -68,10 +70,12 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
     this.password = password;
     this.url = url;
     this.view = view;
+    this.limit = limit;
 
     if (!viewDef.equals("")) {
       // need to post this view def up to couchdb, make the call directly
       // to the UDX class.
+      CouchUdx.makeView(username, password, url, viewDef);
     }
 
     setAllowedAccess(SqlAccessType.READ_ONLY);
@@ -85,9 +89,11 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
     RexNode rnPw = builder.makeLiteral(password);
     RexNode rnUrl = builder.makeLiteral(url);
     RexNode rnView = builder.makeLiteral(view);
+    RexNode rnLimit = builder.makeLiteral(limit);
 
     return toUdxRel(cluster, connection, udxSpecificName,
-        server.getServerMofId(), new RexNode[] {rnUn, rnPw, rnUrl, rnView});
+        server.getServerMofId(),
+        new RexNode[] {rnUn, rnPw, rnUrl, rnView, rnLimit});
   }
 
   /**
