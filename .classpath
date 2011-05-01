@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/farrago.jar"/>
+	<classpathentry kind="lib" path="libs/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/openjava.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

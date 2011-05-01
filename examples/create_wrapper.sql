@@ -5,11 +5,8 @@ set schema 'couchdb';
 set path 'couchdb';
 
 create or replace foreign data wrapper couchdb_wrapper
-library '/Users/ngoodman/dev/eigenbase_workspace/couchdb-connectors/deploy/couchdbConnector.jar'
+library 'class com.dynamobi.db.conn.couchdb.MedCouchDataWrapper'
 language java;
-
--- and this one
-call sqlj.install_jar('file:/Users/ngoodman/dev/eigenbase_workspace/couchdb-connectors/deploy/couchdbConnector.jar', 'couchdb_jar', 0);
 
 -- helper udx for foreign tables
 create or replace function couchdb.wrapper_udx(
@@ -21,5 +18,5 @@ returns table(objects varchar(65535))
 language java
 parameter style system defined java
 no sql
-external name 'couchdb.couchdb_jar:com.dynamobi.db.conn.couchdb.CouchUdx.query';
+external name 'class com.dynamobi.db.conn.couchdb.CouchUdx.query';
 

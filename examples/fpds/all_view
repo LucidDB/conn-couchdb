@@ -1,0 +1,10 @@
+{
+   "_id": "_design/all",
+   "_rev": "3-33626ce742229dc05f0f54e3c5ecfc4f",
+   "language": "javascript",
+   "views": {
+       "all": {
+           "map": "function(doc) { if ( doc.amounts.obligatedAmount % 101 == 0 )  { emit(doc._id, { AMOUNT_OBLIGATED: doc.amounts.obligatedAmount  , SOLICATION_METHOD : doc.competition_information.solictationProcedures , COMPETE_CAT : doc.competition_information.compete_cat , SIGNED_DATE : doc.contract_information.effectiveDate , CURRENT_COMPLETION_DATE : doc.contract_information.currentCompletionDate , ULTIMATE_COMPLETION_DATE : doc.contract_information.ultimateCompletionDate , CONT_ANNUAL_REV : doc.contractor_characteristics.annualRevenue , CONT_NUM_EMPLOYEES : doc.contractor_characteristics.numberOfEmployees , CONT_SMALL_BUS : doc.contractor_characteristics.smallBusinessFlag , CONT_WOMENOWNED_BUS : doc.contractor_characteristics.womenOwnedFlag , CONT_CITY : doc.contractor_information.city , CONT_NAME : doc.contractor_information.contractorName , CONT_COUNTRY : doc.contractor_information.vendorCountryCode , CONT_STATE : doc.contractor_information.state , PROD_OR_SERVICE_CODE : doc.product_or_service_information.productOrServiceCode , AGENCY_FUNDINGID : doc.purchaser_information.fundingRequestingAgencyID , AGENCY_CAT : doc.purchaser_information.maj_agency_cat , AGENCY_MOD : doc.purchaser_information.maj_agency_cat , FISCAL_YEAR: doc.record_information.fiscal_year , AGENCY_ID: doc.record_information.agencyID }); } }"
+       }
+   }
+}
