@@ -1,15 +1,16 @@
 !set verbose true;
 
-create or replace schema couchdb;
-set schema 'couchdb';
-set path 'couchdb';
+create or replace schema sys_couchdb;
+set schema 'sys_couchdb';
+set path 'sys_couchdb';
 
 create or replace foreign data wrapper couchdb_wrapper
-library 'class com.dynamobi.db.conn.couchdb.MedCouchDataWrapper'
+--library 'class com.dynamobi.db.conn.couchdb.MedCouchDataWrapper'
+library 'plugin/couchdbConnector.jar'
 language java;
 
 -- helper udx for foreign tables
-create or replace function couchdb.wrapper_udx(
+create or replace function sys_couchdb.wrapper_udx(
   username varchar(65535),
   password varchar(65535),
   url varchar(65535),

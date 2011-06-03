@@ -24,13 +24,8 @@ import java.sql.*;
 
 import net.sf.farrago.namespace.*;
 import net.sf.farrago.namespace.impl.*;
-import net.sf.farrago.resource.*;
 import net.sf.farrago.type.*;
-import net.sf.farrago.query.*;
-
 import org.eigenbase.reltype.*;
-import org.eigenbase.util.*;
-
 import java.util.logging.*;
 import net.sf.farrago.trace.*;
 

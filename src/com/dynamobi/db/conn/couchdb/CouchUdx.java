@@ -148,7 +148,7 @@ public class CouchUdx {
     if (url.charAt(url.length() - 1) != '/' && view.charAt(0) != '/')
       full_url += "/";
     if (url.indexOf("_view") == -1 &&
-        view.substring(0,5).indexOf("_view") == -1) {
+        view.indexOf("_view") == -1) {
       full_url += "_view";
       if (view.charAt(0) != '/')
         full_url += "/";
