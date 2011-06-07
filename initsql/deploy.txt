@@ -1,0 +1,25 @@
+SQLActions[ ] = {
+  "BEGIN INSTALL
+  create or replace foreign data wrapper couchdb_wrapper
+    -- you may need to edit this path
+    library 'thisjar'
+    language java;
+
+  -- helper udx for foreign tables
+    create or replace function wrapper_udx(
+        username varchar(65535),
+        password varchar(65535),
+        url varchar(65535),
+        view varchar(65535),
+        "LIMIT" varchar(65535))
+    returns table(objects varchar(65535))
+    language java
+    parameter style system defined java
+    no sql
+    external name 'thisjar:com.dynamobi.db.conn.couchdb.CouchUdx.query';
+END INSTALL",
+    "BEGIN REMOVE
+      drop function wrapper_udx cascade;
+      drop foreign data wrapper couchdb_wrapper;
+END REMOVE"
+}

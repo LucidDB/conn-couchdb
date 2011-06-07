@@ -26,11 +26,15 @@
   </target>
 
   <target name="jar" depends="build">
-    <jar destfile="${build.dir}/couchdbConnector.jar">
+    <copy file="initsql/deploy.txt" todir="${build.dir}/classes" />
+    <jar destfile="${build.dir}/conn-couchdb.jar">
       <manifest>
         <!-- necessary for LucidDB -->
         <attribute name="DataWrapperClassName"
           value="com.dynamobi.db.conn.couchdb.MedCouchDataWrapper" />
+        <section name="deploy.txt">
+          <attribute name="SQLJDeploymentDescriptor" value="TRUE" />
+        </section>
       </manifest>
       <fileset dir="${build.dir}/classes">
         <include name="**/*" />
