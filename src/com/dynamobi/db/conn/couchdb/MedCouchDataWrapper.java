@@ -24,6 +24,7 @@ import java.sql.*;
 
 import net.sf.farrago.namespace.*;
 import net.sf.farrago.namespace.impl.*;
+import com.dynamobi.db.conn.couchdb.resource.*;
 
 /**
  * Simple wrapper class for the creation of a foreign table wrapper, nothing
@@ -60,5 +61,29 @@ public class MedCouchDataWrapper extends MedAbstractDataWrapper {
       server.closeAllocation();
       throw e;
     }
+  }
+
+  // implement FarragoMedDataWrapper
+  public DriverPropertyInfo [] getServerPropertyInfo(
+      Locale locale,
+      Properties wrapperProps,
+      Properties serverProps)
+  {
+    MedPropertyInfoMap infoMap =
+      new MedPropertyInfoMap(
+          MedCouchResource.instance(),
+          "MedCouchDb",
+          serverProps);
+    infoMap.addPropInfo(MedCouchDataServer.PROP_USERNAME, false);
+    infoMap.addPropInfo(MedCouchDataServer.PROP_PASSWORD, false);
+    infoMap.addPropInfo(
+        MedCouchDataServer.PROP_URL,
+        false,
+        new String[] {MedCouchDataServer.DEFAULT_URL});
+    infoMap.addPropInfo(MedCouchDataServer.PROP_VIEW, false);
+    infoMap.addPropInfo(MedCouchDataServer.PROP_VIEW_DEF, false);
+    infoMap.addPropInfo(MedCouchDataServer.PROP_LIMIT, false);
+
+    return infoMap.toArray();
   }
 }

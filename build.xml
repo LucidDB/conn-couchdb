@@ -17,8 +17,9 @@
     <mkdir dir="${build.dir}/classes" />
     <!-- hack to package all classes up together -->
     <unjar dest="${build.dir}/classes">
-      <fileset excludes="farrago.jar" file="${lib.dir}/*.jar" />
+      <fileset excludes="farrago.jar eigenbase-resgen.jar eigenbase-xom.jar" file="${lib.dir}/*.jar" />
     </unjar>
+    <antcall target="generateResources" />
     <javac srcdir="${src.dir}" destdir="${build.dir}/classes"
       includeantruntime="false"
       classpathref="classpath" 
@@ -41,5 +42,24 @@
       </fileset>
     </jar>
   </target>
+
+  <target name="generateResources"
+    depends="checkResourceUptodate" unless="resource.uptodate">
+    <taskdef name="resgen" classname="org.eigenbase.resgen.ResourceGenTask">
+      <classpath refid="classpath" />
+    </taskdef>
+    <resgen srcdir="${src.dir}" destdir="${src.dir}" resdir="${build.dir}/classes"
+      style="functor" locales="en_US">
+      <include name="com/dynamobi/db/conn/couchdb/resource/MedCouchResource.xml"/>
+    </resgen>
+  </target>
+
+  <target name="checkResourceUptodate">
+    <condition property="resource.uptodate">
+      <uptodate srcfile="com/dynamobi/db/conn/couchdb/resource/MedCouchResource.xml"
+        targetfile="com/dynamobi/db/conn/couchdb/resource/MedCouchResource.java" />
+    </condition>
+  </target>
+
 
 </project>

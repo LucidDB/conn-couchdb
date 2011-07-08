@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type="text/xsl"
+href="http://eigenbase.sourceforge.net/resgen/Resource.xsl" ?>
+
+<resourceBundle
+  static="false"
+  locale="en_US"
+  exceptionClassName="org.eigenbase.util.EigenbaseException">
+
+  <message name="MedCouchDb_USERNAME_Description">
+    <text>Specifies the Basic Auth Username used to log in to the CouchDB server if necessary.</text>
+  </message>
+
+  <message name="MedCouchDb_PASSWORD_Description">
+    <text>Specifies the Basic Auth Password used to log in to the CouchDB server if necessary.</text>
+  </message>
+
+  <message name="MedCouchDb_URL_Description">
+    <text>Specifies the location of the CouchDB REST URL endpoint.</text>
+  </message>
+
+  <message name="MedCouchDb_VIEW_Description">
+    <text>CouchDB REST view endpoint, concatenated to the end of the URL with a slash if necessary. Can be specified on a per foreign-table basis.</text>
+  </message>
+
+  <message name="MedCouchDb_VIEW_DEF_Description">
+    <text>Specifies a new view, formatted as a JSON string, to be created on the fly and subsequently used. Only supported at the time of the server creation. Starts with "views" at the top level, then specifies the view and its map/reduce function.></text>
+  </message>
+
+  <message name="MedCouchDb_LIMIT_Description">
+    <text>Limit parameter passed to CouchDB to limit number of results returned.</text>
+  </message>
+
+</resourceBundle>
+
