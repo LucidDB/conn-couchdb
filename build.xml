@@ -11,6 +11,9 @@
 
   <target name="clean">
     <delete dir="${build.dir}" />
+    <delete>
+      <fileset file="${src.dir}/com/dynamobi/db/conn/couchdb/resource/MedCouchResource*.java" />
+    </delete>
   </target>
 
   <target name="build">
@@ -23,7 +26,9 @@
     <javac srcdir="${src.dir}" destdir="${build.dir}/classes"
       includeantruntime="false"
       classpathref="classpath" 
-      debug="true"/>
+      debug="true">
+      <!--<compilerarg value="-Xlint:unchecked" />-->
+    </javac>
   </target>
 
   <target name="jar" depends="build">

@@ -48,6 +48,9 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
   private final String url;
   private final String view;
   private final String limit;
+  private final boolean reduce;
+  private final String groupLevel;
+  private final boolean outputJson;
 
   private final String udxSpecificName;
 
@@ -61,6 +64,9 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
       String view,
       String viewDef,
       String limit,
+      boolean reduce,
+      String groupLevel,
+      boolean outputJson,
       String udxSpecificName) throws java.sql.SQLException {
     super(localName, null, rowType, null, null);
     this.server = server;
@@ -71,6 +77,9 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
     this.url = url;
     this.view = view;
     this.limit = limit;
+    this.reduce = reduce;
+    this.groupLevel = groupLevel;
+    this.outputJson = outputJson;
 
     if (!viewDef.equals("")) {
       // need to post this view def up to couchdb, make the call directly
@@ -90,10 +99,13 @@ public class MedCouchColumnSet extends MedAbstractColumnSet {
     RexNode rnUrl = builder.makeLiteral(url);
     RexNode rnView = builder.makeLiteral(view);
     RexNode rnLimit = builder.makeLiteral(limit);
+    RexNode rnReduce = builder.makeLiteral(reduce);
+    RexNode rnGroupLevel = builder.makeLiteral(groupLevel);
+    RexNode rnOutputJson = builder.makeLiteral(outputJson);
 
     return toUdxRel(cluster, connection, udxSpecificName,
         server.getServerMofId(),
-        new RexNode[] {rnUn, rnPw, rnUrl, rnView, rnLimit});
+        new RexNode[] {rnUn, rnPw, rnUrl, rnView, rnLimit, rnReduce, rnGroupLevel, rnOutputJson});
   }
 
   /**

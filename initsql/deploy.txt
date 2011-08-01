@@ -5,13 +5,19 @@ SQLActions[ ] = {
     library 'thisjar'
     language java;
 
+  -- install wrapper into sys_couchdb
+  create or replace schema localdb.sys_couchdb;
+
   -- helper udx for foreign tables
-    create or replace function wrapper_udx(
+    create or replace function localdb.sys_couchdb.wrapper_udx(
         username varchar(65535),
         password varchar(65535),
         url varchar(65535),
         view varchar(65535),
-        "LIMIT" varchar(65535))
+        "LIMIT" varchar(65535),
+        reduce boolean,
+        group_level varchar(128),
+        output_json boolean)
     returns table(objects varchar(65535))
     language java
     parameter style system defined java
@@ -19,7 +25,7 @@ SQLActions[ ] = {
     external name 'thisjar:com.dynamobi.db.conn.couchdb.CouchUdx.query';
 END INSTALL",
     "BEGIN REMOVE
-      drop function wrapper_udx cascade;
+      drop function localdb.sys_couchdb.wrapper_udx cascade;
       drop foreign data wrapper couchdb_wrapper;
 END REMOVE"
 }

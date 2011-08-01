@@ -54,6 +54,15 @@ public class MedCouchDataServer extends MedAbstractDataServer {
   public static final String PROP_LIMIT = "LIMIT";
   public static final String DEFAULT_LIMIT = "";
 
+  public static final String PROP_REDUCE = "REDUCE";
+  public static final boolean DEFAULT_REDUCE = true;
+
+  public static final String PROP_GROUP_LEVEL = "GROUP_LEVEL";
+  public static final String DEFAULT_GROUP_LEVEL = "EXACT";
+
+  public static final String PROP_OUTPUT_JSON = "OUTPUT_JSON";
+  public static final boolean DEFAULT_OUTPUT_JSON = false;
+
   public static final String PROP_UDX_SPECIFIC_NAME = "UDX_SPECIFIC_NAME";
   public static final String DEFAULT_UDX_SPECIFIC_NAME
     = "LOCALDB.SYS_COUCHDB.WRAPPER_UDX"; // must be created
@@ -64,6 +73,9 @@ public class MedCouchDataServer extends MedAbstractDataServer {
   private String pw;
   private String url;
   private String limit;
+  private boolean reduce;
+  private String groupLevel;
+  private boolean outputJson;
 
   private static final Logger tracer
     = FarragoTrace.getClassTracer(MedCouchDataServer.class);
@@ -78,7 +90,8 @@ public class MedCouchDataServer extends MedAbstractDataServer {
   }
 
   /**
-   * Called on server creation, we can require certain server properties here.
+   * Called on server creation, we can require certain server properties here or
+   * just set some server defaults.
    */
   public void initialize() throws SQLException {
     Properties props = getProperties();
@@ -86,6 +99,9 @@ public class MedCouchDataServer extends MedAbstractDataServer {
     pw = props.getProperty(PROP_PASSWORD, DEFAULT_PASSWORD);
     url = props.getProperty(PROP_URL, DEFAULT_URL);
     limit = props.getProperty(PROP_LIMIT, DEFAULT_LIMIT);
+    reduce = getBooleanProperty(props, PROP_REDUCE, DEFAULT_REDUCE);
+    groupLevel = props.getProperty(PROP_GROUP_LEVEL, DEFAULT_GROUP_LEVEL);
+    outputJson = getBooleanProperty(props, PROP_OUTPUT_JSON, DEFAULT_OUTPUT_JSON);
   }
 
   // implment FarragoMedDataServer
@@ -111,6 +127,9 @@ public class MedCouchDataServer extends MedAbstractDataServer {
     String myPw = tableProps.getProperty(PROP_PASSWORD, pw);
     String myUrl = tableProps.getProperty(PROP_URL, url);
     String myLimit = tableProps.getProperty(PROP_LIMIT, limit);
+    boolean myReduce = getBooleanProperty(tableProps, PROP_REDUCE, reduce);
+    String myGroupLevel = tableProps.getProperty(PROP_GROUP_LEVEL, groupLevel);
+    boolean myOutputJson = getBooleanProperty(tableProps, PROP_OUTPUT_JSON, outputJson);
 
     requireProperty(tableProps, PROP_VIEW);
     String view = tableProps.getProperty(PROP_VIEW);
@@ -133,6 +152,9 @@ public class MedCouchDataServer extends MedAbstractDataServer {
         view,
         viewDef,
         myLimit,
+        myReduce,
+        myGroupLevel,
+        myOutputJson,
         udxSpecificName);
   }
 

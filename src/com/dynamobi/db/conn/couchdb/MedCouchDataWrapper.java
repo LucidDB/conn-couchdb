@@ -83,6 +83,14 @@ public class MedCouchDataWrapper extends MedAbstractDataWrapper {
     infoMap.addPropInfo(MedCouchDataServer.PROP_VIEW, false);
     infoMap.addPropInfo(MedCouchDataServer.PROP_VIEW_DEF, false);
     infoMap.addPropInfo(MedCouchDataServer.PROP_LIMIT, false);
+    infoMap.addPropInfo(MedCouchDataServer.PROP_REDUCE, false,
+        new String[] {new Boolean(
+          MedCouchDataServer.DEFAULT_REDUCE).toString()});
+    infoMap.addPropInfo(MedCouchDataServer.PROP_GROUP_LEVEL, false,
+        new String[] {MedCouchDataServer.DEFAULT_GROUP_LEVEL});
+    infoMap.addPropInfo(MedCouchDataServer.PROP_OUTPUT_JSON, false,
+        new String[] {new Boolean(
+          MedCouchDataServer.DEFAULT_OUTPUT_JSON).toString()});
 
     return infoMap.toArray();
   }

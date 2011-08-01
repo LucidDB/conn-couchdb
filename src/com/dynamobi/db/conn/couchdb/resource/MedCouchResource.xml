@@ -20,7 +20,7 @@ href="http://eigenbase.sourceforge.net/resgen/Resource.xsl" ?>
   </message>
 
   <message name="MedCouchDb_VIEW_Description">
-    <text>CouchDB REST view endpoint, concatenated to the end of the URL with a slash if necessary. Can be specified on a per foreign-table basis.</text>
+    <text>CouchDB REST view endpoint, concatenated to the end of the URL with a slash if necessary. Can be specified on a per foreign-table basis. Can be used to send additional CouchDB specific parameters in the GET request.</text>
   </message>
 
   <message name="MedCouchDb_VIEW_DEF_Description">
@@ -29,6 +29,19 @@ href="http://eigenbase.sourceforge.net/resgen/Resource.xsl" ?>
 
   <message name="MedCouchDb_LIMIT_Description">
     <text>Limit parameter passed to CouchDB to limit number of results returned.</text>
+  </message>
+
+  <message name="MedCouchDb_REDUCE_Description">
+    <text>Set to FALSE to always skip the reduce function, if one exists.</text>
+  </message>
+
+  <message name="MedCouchDb_GROUP_LEVEL_Description">
+    <text>Explicitly state a level to group by before running a reduce. Options are: 'EXACT', which is default, meaning only exact key matches will be grouped; an integer from 1 to N, designating how many items in a key-array should be used for uniqueness (so '1' will group on the first object in the key, array index 0. '2' will group on just the first two objects matching. 'N' is indistinguishable from 'EXACT'); and lastly 'NONE', which ignores key-equality checks. There will be support for pushing down groupings specified in 'GROUP BY'; specifically, if a column matches a key value, it will be grouped by CouchDB, otherwise by LucidDB.</text>
+  </message>
+
+  <message name="MedCouchDb_OUTPUT_JSON_Description">
+    <text>If set to 'TRUE', will assume a key-value table and output json
+      strings as given.</text>
   </message>
 
 </resourceBundle>
