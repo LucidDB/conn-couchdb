@@ -145,8 +145,8 @@ public class CouchUdx {
       // JSONArrays and return the count.
       // (that is, instead of only supporing arrays containing items of one
       // type, support every type.)
-      boolean hasLiteralKey = mergeParams(params, key, "LITERAL_KEY");
-      boolean hasLiteralValue = mergeParams(params, value, "LITERAL_VALUE");
+      boolean hasLiteralKey = mergeParams(params, key, "KEY");
+      boolean hasLiteralValue = mergeParams(params, value, "VALUE");
 
       if (params.size() != paramNames.length) {
         // We have more params than columns..
@@ -341,15 +341,19 @@ public class CouchUdx {
       return false;
     } else if (kv instanceof JSONArray) {
       // merges each of [ {'x': v}, ... ] with params.
+      int i = 0 ;
       for (Object ob : (JSONArray) kv) {
         if (ob instanceof JSONObject) {
           params.putAll((JSONObject)ob);
+        } else {
+          params.put(literalKey + i, ob);
         }
+        i++;
       }
       return false;
     } else {
       // appends literal value with passed in key-name.
-      params.put(literalKey, kv);
+      params.put(literalKey + "0", kv);
     }
     return true;
   }
