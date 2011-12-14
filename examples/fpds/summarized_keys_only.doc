@@ -1,0 +1,11 @@
+{
+   "_id": "_design/summarized_keys_only",
+   "_rev": "4-9ab2017faa7aa49f2b29ab504a366465",
+   "language": "javascript",
+   "views": {
+       "year_agency": {
+           "map": "function(doc) { emit([doc.record_information.fiscal_year, doc.record_information.agencyID], parseInt(doc.amounts.obligatedAmount));  }",
+           "reduce": "function (key, values) { return sum(values);}"
+       }
+   }
+}

@@ -1,0 +1,19 @@
+{
+   "_id": "_design/summarized",
+   "_rev": "5-c37c5edab05e86c1c7c88a50bf4c72da",
+   "language": "javascript",
+   "views": {
+       "year_agency": {
+           "map": "function(doc) { emit([\n {year: doc.record_information.fiscal_year},\n {agency: doc.record_information.agencyID},\n {obAmount: doc.amounts.obligatedAmount}],\n parseInt(doc.amounts.obligatedAmount));  }",
+           "reduce": "function (key, values) { return sum(values);}"
+       },
+       "year_agency2": {
+           "map": "function(doc) { emit([\n {year: doc.record_information.fiscal_year},\n {agency: doc.record_information.agencyID},\n {obAmount: doc.amounts.obligatedAmount}],\n parseInt(doc.amounts.obligatedAmount));  }",
+           "reduce": "_sum"
+       },
+       "year_agency3": {
+           "map": "function(doc) { emit([\n {year: doc.record_information.fiscal_year},\n {agency: doc.record_information.agencyID},\n {obAmount: doc.amounts.obligatedAmount}],\n parseInt(doc.amounts.obligatedAmount));  }",
+           "reduce": "_stats"
+       }
+   }
+}
