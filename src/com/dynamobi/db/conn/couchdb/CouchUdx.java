@@ -103,7 +103,7 @@ public class CouchUdx {
     FarragoParameterMetaData fpmd = (FarragoParameterMetaData) pmd;
     int paramCount = fpmd.getParameterCount();
     String[] paramNames = new String[paramCount];
-    for ( int i = 0 ; i < paramCount; i++ ){
+    for (int i = 0 ; i < paramCount; i++) {
       paramNames[i] = fpmd.getFieldName(i+1); // JDBC offset
     }
 
@@ -141,12 +141,8 @@ public class CouchUdx {
       }
 
       Map<String, Object> params = new HashMap<String, Object>(paramNames.length);
-      // TODO: improve mergeParams to recursively add literals inside
-      // JSONArrays and return the count.
-      // (that is, instead of only supporing arrays containing items of one
-      // type, support every type.)
-      boolean hasLiteralKey = mergeParams(params, key, "KEY");
-      boolean hasLiteralValue = mergeParams(params, value, "VALUE");
+      mergeParams(params, key, "KEY");
+      mergeParams(params, value, "VALUE");
 
       if (params.size() != paramNames.length) {
         // We have more params than columns..
@@ -157,21 +153,6 @@ public class CouchUdx {
 
       for ( int c = 0 ; c < paramNames.length ; c++ ) {
         Object o = params.get( paramNames[c] );
-        if (o == null) {
-          // REVIEW: they may have misspelled/mis-cased a column, e.g. if the
-          // couchDB key was 'agency' and in the foreign table they just
-          // defined agency without double quotes.
-          // Maybe we should do some simple-checks here such as a get
-          // on upper-case and lower-case and titled respectively?
-          if (hasLiteralKey) { // stuff this in whatever col we're at
-            hasLiteralKey = false;
-            o = params.get("LITERAL_KEY");
-          } else if (hasLiteralValue) {
-            hasLiteralValue = false;
-            o = params.get("LITERAL_VALUE");
-          }
-        }
-
         if ( o != null ) {
           resultInserter.setObject(c+1, o);
         }
@@ -325,23 +306,21 @@ public class CouchUdx {
    *
    * @param params - eventual json dict
    * @param kv - key or value in key-value pair
-   * @param literalKey - key string to use when kv is a literal obj instead
+   * @param literalKey - key prefix to use when kv is a literal obj instead
    * of a json array/object.
-   * @return Returns true if obj is a literal.
    */
-  private static boolean mergeParams(
+  private static void mergeParams(
       Map<String, Object> params,
       Object kv,
       String literalKey)
   {
     // determine type of kv:
     if (kv instanceof JSONObject) {
-      // merges {'x': v[, {..}, ..]} with params.
+      // merges {'x': v, 'y': v2, ...} with params.
       params.putAll((JSONObject)kv);
-      return false;
     } else if (kv instanceof JSONArray) {
-      // merges each of [ {'x': v}, ... ] with params.
-      int i = 0 ;
+      // merges each of [ {'x': v}, v2, ... ] with params.
+      int i = 0;
       for (Object ob : (JSONArray) kv) {
         if (ob instanceof JSONObject) {
           params.putAll((JSONObject)ob);
@@ -350,12 +329,10 @@ public class CouchUdx {
         }
         i++;
       }
-      return false;
     } else {
       // appends literal value with passed in key-name.
       params.put(literalKey + "0", kv);
     }
-    return true;
   }
 
   /**
