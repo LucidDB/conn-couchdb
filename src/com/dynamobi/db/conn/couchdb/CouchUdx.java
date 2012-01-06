@@ -343,6 +343,7 @@ public class CouchUdx {
    * accessed through getKey() and ... for "value" accessed through getValue().
    *
    * This class made with the help of examples on JSON Simple page.
+   * Methods returning "false" signify it's safe to pause the parser and read.
    */
   private static class RowProducer implements ContentHandler {
     private Stack valueStack;
@@ -441,7 +442,7 @@ public class CouchUdx {
       height--;
       // "Forget" about these actual objects by never pushing to the obj holder
       // and removing the empty map from the parent list.
-      if (height == 1) {
+      if (height == 1 && ("key".equals(key) || "value".equals(key)) ) {
         // kind of bad design here, but since we know we're pausing twice per
         // row in the array, we want to do this remove step on the second stop.
         if (remove_self) {
