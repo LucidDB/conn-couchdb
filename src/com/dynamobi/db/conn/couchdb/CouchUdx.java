@@ -141,10 +141,10 @@ public class CouchUdx {
       }
 
       Map<String, Object> params = new HashMap<String, Object>(paramNames.length);
-      mergeParams(params, key, "KEY");
-      mergeParams(params, value, "VALUE");
+      int dupes = mergeParams(params, key, "KEY");
+      dupes += mergeParams(params, value, "VALUE");
 
-      if (params.size() != paramNames.length) {
+      if (params.size() - dupes != paramNames.length) {
         // We have more params than columns..
         throw new SQLException("Read " + params.size() + " params and "
             + paramNames.length + " columns, which need to match. Did you "
@@ -301,38 +301,44 @@ public class CouchUdx {
   }
   
   /**
-   * This function merges three types of forms of key/values with
-   * a passed in set of params for full-column coverage.
+   * This method handles merges for three types of forms of
+   * key/values with a passed in set of params for full-column coverage.
    *
    * @param params - eventual json dict
    * @param kv - key or value in key-value pair
-   * @param literalKey - key prefix to use when kv is a literal obj instead
-   * of a json array/object.
+   * @param prefix - prefix to use to have ordered keys/values
+   * @return Returns the number of "duplicates"; that is, how many
+   * values are now pointed at by two keys instead of one. This will
+   * be 0 unless we have a mix of named and positional in an array.
    */
-  private static void mergeParams(
+  private static int mergeParams(
       Map<String, Object> params,
       Object kv,
-      String literalKey)
+      String prefix)
   {
-    // determine type of kv:
     if (kv instanceof JSONObject) {
-      // merges {'x': v, 'y': v2, ...} with params.
+      // merges {'x': v, 'y': v2, ...} with params, cannot rely on order.
       params.putAll((JSONObject)kv);
     } else if (kv instanceof JSONArray) {
-      // merges each of [ {'x': v}, v2, ... ] with params.
+      // merges each of [ {'x': v}, v2, ... ] with params, assigning each
+      // element in the array to prefix+idx as well. However, if
+      // an object contains {'x': v, 'y': v2}, prefix+idx will refer to the
+      // whole object currently.
       int i = 0;
+      int dupes = 0;
       for (Object ob : (JSONArray) kv) {
         if (ob instanceof JSONObject) {
           params.putAll((JSONObject)ob);
-        } else {
-          params.put(literalKey + i, ob);
+          dupes++;
         }
-        i++;
+        params.put(prefix + (i++), ob);
       }
+      return dupes;
     } else {
-      // appends literal value with passed in key-name.
-      params.put(literalKey + "0", kv);
+      // merges 'x' or 3.4 or some single-value thing and gives it the 0th idx
+      params.put(prefix + "0", kv);
     }
+    return 0;
   }
 
   /**
